@@ -1,7 +1,7 @@
 package com.security.example.demo.service;
 
-import com.security.example.demo.model.User;
+import com.security.example.demo.model.ApplicatioUser;
 
 public interface UserService {
-    User loadUserByUserName(String userName);
+    ApplicatioUser loadUserByUserName(String userName);
 }

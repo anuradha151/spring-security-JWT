@@ -1,13 +1,13 @@
 package com.security.example.demo.model;
 
-public class User {
+public class ApplicatioUser {
     private String userName;
     private String password;
 
-    public User() {
+    public ApplicatioUser() {
     }
 
-    public User(String userName, String password) {
+    public ApplicatioUser(String userName, String password) {
         this.userName = userName;
         this.password = password;
     }
