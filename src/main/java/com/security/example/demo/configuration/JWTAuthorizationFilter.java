@@ -1,11 +1,11 @@
 package com.security.example.demo.configuration;
 
-import com.security.example.demo.model.ApplicatioUser;
-import com.security.example.demo.service.UserService;
+import com.security.example.demo.service.impl.CustomUserDetailServiceImpl;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -18,16 +18,16 @@ import java.io.IOException;
 import static com.security.example.demo.configuration.SecurityConstant.*;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
-    private final UserService userService;
+    private final CustomUserDetailServiceImpl customUserDetailService;
 
-    public JWTAuthorizationFilter(AuthenticationManager authenticationManager, UserService userService) {
+    public JWTAuthorizationFilter(AuthenticationManager authenticationManager, CustomUserDetailServiceImpl customUserDetailService) {
         super(authenticationManager);
-        this.userService = userService;
+        this.customUserDetailService = customUserDetailService;
     }
 
-    public JWTAuthorizationFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint, UserService userService) {
+    public JWTAuthorizationFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint, CustomUserDetailServiceImpl customUserDetailService) {
         super(authenticationManager, authenticationEntryPoint);
-        this.userService = userService;
+        this.customUserDetailService = customUserDetailService;
     }
 
     @Override
@@ -51,8 +51,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                 .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
                 .getBody()
                 .getSubject();
-        ApplicatioUser applicatioUser = userService.loadUserByUserName(userName);
-        return userName != null ? new UsernamePasswordAuthenticationToken(applicatioUser, null) : null;
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(userName);
+        return userName != null ? new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()) : null;
     }
 
 }
