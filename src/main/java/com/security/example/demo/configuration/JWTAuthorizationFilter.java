@@ -1,5 +1,6 @@
 package com.security.example.demo.configuration;
 
+import com.security.example.demo.model.ApplicatioUser;
 import com.security.example.demo.service.impl.CustomUserDetailServiceImpl;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,7 +53,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                 .getBody()
                 .getSubject();
         UserDetails userDetails = customUserDetailService.loadUserByUsername(userName);
-        return userName != null ? new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()) : null;
+        ApplicatioUser applicatioUser = customUserDetailService.loadApplicationUserByUserName(userName);
+        return userName != null ? new UsernamePasswordAuthenticationToken(applicatioUser, null, userDetails.getAuthorities()) : null;
     }
 
 }

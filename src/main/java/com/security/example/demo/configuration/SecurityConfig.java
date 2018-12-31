@@ -1,6 +1,6 @@
 package com.security.example.demo.configuration;
 
-import com.security.example.demo.service.UserService;
+import com.security.example.demo.service.impl.CustomUserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    private UserService userService;
+    private CustomUserDetailServiceImpl customUserDetailService;
 
     public SecurityConfig() {
     }
@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/*/floor2/**").hasRole("ADMIN")
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager(), userService));
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), customUserDetailService));
 
 
     }
